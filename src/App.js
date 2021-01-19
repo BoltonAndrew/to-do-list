@@ -1,55 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
-class App extends React.Component {
-  state = {
-    task: "",
-    taskArr: []
-  };
+const App = () => {
+  const [task, setTask] = useState("");
+  const [taskArr, setTaskArr] = useState([]);
 
-  taskUpdate = (event) => {
-    let nam = event.target.name;
+  const taskUpdate = (event) => {
     let val = event.target.value;
-    this.setState({ [nam]: val })
+    setTask(val)
   }
 
-  handleSubmit = (event) => {
-    let floatArr = [...this.state.taskArr];
+  const handleSubmit = (event) => {
+    let floatArr = [...taskArr];
     event.preventDefault()
-    floatArr.push(this.state.task);
-    this.setState({ taskArr: floatArr, task: "" })
+    floatArr.push(task);
+    setTaskArr(floatArr);
+    setTask("");
   }
 
-  compTask = (index) => {
-    let compArr = this.state.taskArr;
-    compArr[index] += " ✔"
-    this.setState({ taskArr: compArr })
+  const compTask = (index) => {
+    let compArr = [...taskArr];
+    compArr[index] += " ✔";
+    setTaskArr(compArr);
   }
 
-  removeTask = (index) => {
-    let delArr = [...this.state.taskArr];
+  const removeTask = (index) => {
+    let delArr = [...taskArr];
     delArr.splice(index, 1);
-    this.setState({ taskArr: delArr });
+    setTaskArr(delArr);
   }
 
-  render() {
-    let isDisabled = this.state.task === ""
-    return (
-      <div className="App">
-        <div className="inputs">
-          <form onSubmit={this.handleSubmit} className="inputForm">
-            <input className="inputBox" type="text" name="task" value={this.state.task} onChange={this.taskUpdate} autoComplete="off"/>
-            <button className="submit" type="submit" disabled={isDisabled}>Submit</button>
-          </form>
-        </div>
-        <div className="todoList">
-          {this.state.taskArr.map((item, index) => {
-            return <ListItem key={index} compTask={this.compTask} removeTask={this.removeTask} itemNumber={index} item={item}/>
-          })}
-        </div>
+  let isDisabled = task === ""
+  return (
+    <div className="App">
+      <div className="inputs">
+        <form onSubmit={handleSubmit} className="inputForm">
+          <input className="inputBox" type="text" name="task" value={task} onChange={taskUpdate} autoComplete="off"/>
+          <button className="submit" type="submit" disabled={isDisabled}>Submit</button>
+        </form>
       </div>
-    );
-  }
+      <div className="todoList">
+        {taskArr.map((item, index) => {
+          return <ListItem key={index} compTask={compTask} removeTask={removeTask} itemNumber={index} item={item}/>
+        })}
+      </div>
+    </div>
+  );
 }
 
 const ListItem = (props) => {
